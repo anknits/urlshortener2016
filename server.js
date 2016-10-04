@@ -1,4 +1,5 @@
 var express = require('express');
+var path = require('path')
 var app = express();
 var mongodb = require('mongodb');
 var validUrl = require('valid-url');
@@ -45,17 +46,18 @@ MongoClient.connect(mongourl, function (err, db) {
 app.get('/new/:url*', function (req, res) {
     input = req.params.url
     if (validUrl.isUri(input)){
+      // get id from input url
       var id = dbOperations(0)
       var shorturl = hosturl+"/"+id
       res.send(JSON.stringify({"original_url: " : input , "short_url: " : shorturl}));  
     } else {
-        res.send(JSON.stringify({" the url you passed seems invalid: " : input}))
+        res.send(JSON.stringify({" the url doesn't exist on our database: " : input}))
     }
     
 });
 
-app.get('/:id', function(req,res){
-  input = req.params.id
+app.get('/:url', function(req,res){
+  input = req.params.url
   if (validUrl.isUri(input)){
     var originalurl = dbOperations(1)
     res.redirect(originalurl)
@@ -64,6 +66,10 @@ app.get('/:id', function(req,res){
     res.send(JSON.stringify({" the url you passed seems invalid: " : input}))
     }
 })
+
+app.get('/', function(req, res) {
+  res.send('hello world');
+});
 
 app.listen(process.env.PORT || 8080, function () {
   console.log('Example app listening on port', process.env.PORT);
