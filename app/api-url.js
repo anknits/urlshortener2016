@@ -15,8 +15,8 @@ app.route('/')
 function searchAndRedirect(req,res){
     var input = req.params.url
     // get id from input url
-    var id = input
-    if (validUrl.isUri(input)){
+    var id = Number(input)
+    if (validUrl.isUri(process.env.app_url+input)){
     //searchDbForId(input,db)
     var coll = db.collection('urlcoll')
     coll.find({"_id": id}).limit(1).toArray(function(error,documents){
