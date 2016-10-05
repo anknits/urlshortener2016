@@ -19,27 +19,28 @@ function searchAndRedirect(req,res){
     if (validUrl.isUri(process.env.app_url+input)){
     //searchDbForId(input,db)
     var coll = db.collection('urlcoll')
-    coll.find({"_id": id}).limit(1).toArray(function(error,documents){
+    debugger
+    coll.findOne({"_id": id}, function(error,documents){
         if (error) throw error
-        if(documents.length == 1)
+        if(documents)
            res.redirect(documents.originalurl)
         else
         {
-          res.send(JSON.stringify({" the url doesn't exist on our database: " : input}))
+          res.send(JSON.stringify({" the url doesn't exist on our database " : input}))
         }
     })
   }
   else {
-    res.send(JSON.stringify({" Please make sure this is a valid url: " : input}))
+    res.send(JSON.stringify({" Please make sure this is a valid url " : input}))
   }
 }
 
 function searchAndCreate(req,res){
-    var input = req.params.url.slice(5)
+    var input = req.params.url
     if (validUrl.isUri(input)){
       // get id, make short-url and display
       var id = searchDbForLink(input,db)
-      var shorturl = process.env.app_url+"/"+id
+      var shorturl = process.env.app_url+id
       res.send(JSON.stringify({"original_url: " : input , "short_url: " : shorturl}));  
     } else {
       res.send(JSON.stringify({" Please make sure this is a valid url " : input}))
@@ -49,9 +50,9 @@ function searchAndCreate(req,res){
 function searchDbForLink(link,db){
     var coll = db.collection('urlcoll')
     // first search if id exists in database. if yes, return it. else create Id.
-    coll.find({originalurl: link}).limit(1).toArray(function(error,documents){
+    coll.findOne({originalurl: link}, function(error,documents){
         if (error) throw error
-        if(documents.length == 1)
+        if(documents)
            return documents._id
         else
         {
