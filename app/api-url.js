@@ -16,6 +16,7 @@ function searchAndRedirect(req,res){
     // get id from input url
     var id = Number(input)
     if (validateURL(process.env.app_url+input)){
+    if (input != 'favicon.ico'){
     //searchDbForId(input,db)
     var coll = db.collection('urlcoll')
     coll.findOne({"_id": id}, function(error,documents){
@@ -27,6 +28,7 @@ function searchAndRedirect(req,res){
           res.send(JSON.stringify({" the url doesn't exist on our database " : input}))
         }
     })
+    }
   }
   else {
     res.send(JSON.stringify({" Please make sure this is a valid url " : input}))
