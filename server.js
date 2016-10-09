@@ -1,5 +1,4 @@
 var express = require('express');
-var path = require('path')
 var app = express();
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
@@ -12,7 +11,7 @@ MongoClient.connect(mongourl, function (err, db) {
     console.log('Unable to connect to the mongoDB server. Error:', err);
   } 
   else {
-    console.log('Connection established to', mongourl);
+    console.log('Connection established to database');
     //var coll = db.collection('urlcoll')
     api(app,db)
   }
